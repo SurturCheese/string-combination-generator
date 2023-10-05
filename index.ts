@@ -1,22 +1,27 @@
-export class Generator {
-  private dictionary: string[];
+class Generator {
+  private readonly alternative: boolean;
+  private readonly dictionary: string[];
   private gridPosition: number[];
-  private alternative: boolean;
+  private readonly length: number;
 
-  constructor(dictionary: string[], count: number, alternative = false) {
+  constructor(dictionary: string[], length: number, alternative = false) {
     this.dictionary = dictionary;
     this.alternative = alternative;
-    this.gridPosition = alternative ? [0] : Array(count).fill(0);
+    this.length = length;
+    this.gridPosition = alternative ? [0] : Array(length).fill(0);
   }
 
-  // TODO : implemenet complete for alternative = true
   private isComplete(): boolean {
-    return this.gridPosition.every(
+    const everyCellFilled = this.gridPosition.every(
       (elem) => elem >= this.dictionary.length - 1,
     );
+    if (this.alternative) {
+      return everyCellFilled;
+    }
+    return this.gridPosition.length === this.length && everyCellFilled;
   }
 
-  private incrementGridPosition() {
+  private incrementGridPosition(): void {
     for (let i = this.gridPosition.length - 1; i >= 0; i--) {
       if (this.gridPosition[i] < this.dictionary.length - 1) {
         this.gridPosition[i]++;
@@ -53,4 +58,4 @@ export class Generator {
   }
 }
 
-module.exports = Generator
+module.exports = Generator;
