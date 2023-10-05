@@ -1,7 +1,10 @@
 class Generator {
   private readonly alternative: boolean;
+
   private readonly dictionary: string[];
+
   private gridPosition: number[];
+
   private readonly length: number;
 
   constructor(dictionary: string[], length: number, alternative = false) {
@@ -22,9 +25,9 @@ class Generator {
   }
 
   private incrementGridPosition(): void {
-    for (let i = this.gridPosition.length - 1; i >= 0; i--) {
+    for (let i = this.gridPosition.length - 1; i >= 0; i -= 1) {
       if (this.gridPosition[i] < this.dictionary.length - 1) {
-        this.gridPosition[i]++;
+        this.gridPosition[i] += 1;
         return;
       }
       this.gridPosition[i] = 0;
@@ -34,22 +37,16 @@ class Generator {
     }
   }
 
-  private createStringFromGrid(
-    indices: number[],
-    dictionary: string[],
-  ): string {
-    return indices.map((i) => dictionary[i]).join('');
+  private createStringFromGrid(): string {
+    return this.gridPosition.map((i) => this.dictionary[i]).join('');
   }
 
-  [Symbol.iterator]() {
+  [Symbol.iterator](): Iterator<string> {
     return {
-      next: () => {
+      next: (): IteratorResult<string> => {
         if (!this.isComplete()) {
           this.incrementGridPosition();
-          const res = this.createStringFromGrid(
-            this.gridPosition,
-            this.dictionary,
-          );
+          const res = this.createStringFromGrid();
           return { value: res, done: false };
         }
         return { value: '', done: true };
@@ -58,4 +55,4 @@ class Generator {
   }
 }
 
-module.exports = Generator;
+export default Generator;
